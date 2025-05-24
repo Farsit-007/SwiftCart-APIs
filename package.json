@@ -1,10 +1,5 @@
 {
-  "name": "nextmart-server",
-  "author": {
-    "name": "Khaled Siddique",
-    "email": "khaled@example.com",
-    "url": "https://khaled-siddique.vercel.app"
-  },
+  "name": "swiftcart-server",
   "description": "A fast and lightweight e-commerce platform built with MongoDB, NodeJS, ExpressJS and ReactJS.",
   "keywords": [
     "ecommerce",

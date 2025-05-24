@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import catchAsync from "../../utils/catchAsync";
-import { ProductService } from "./product.service";
-import { IImageFiles } from "../../interface/IImageFile";
-import { IJwtPayload } from "../auth/auth.interface";
-import sendResponse from "../../utils/sendResponse";
-import { StatusCodes } from "http-status-codes";
+import { Request, Response } from 'express';
+import catchAsync from '../../utils/catchAsync';
+import { ProductService } from './product.service';
+import { IImageFiles } from '../../interface/IImageFile';
+import { IJwtPayload } from '../auth/auth.interface';
+import sendResponse from '../../utils/sendResponse';
+import { StatusCodes } from 'http-status-codes';
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.createProduct(
@@ -15,8 +15,7 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Product created successfully",
+    message: 'Product created successfully',
     data: result,
   });
 });
@@ -26,8 +25,7 @@ const getAllProduct = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Products are retrieved successfully",
+    message: 'Products are retrieved successfully',
     meta: result.meta,
     data: result.result,
   });
@@ -39,8 +37,7 @@ const getTrendingProducts = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Products are retrieved successfully",
+    message: 'Products are retrieved successfully',
     data: result,
   });
 });
@@ -50,8 +47,7 @@ const getSingleProduct = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Product retrieved successfully",
+    message: 'Product retrieved successfully',
     data: result,
   });
 });
@@ -64,8 +60,7 @@ const getMyShopProducts = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Products are retrieved successfully",
+    message: 'Products are retrieved successfully',
     meta: result.meta,
     data: result.result,
   });
@@ -87,13 +82,11 @@ const updateProduct = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Product updated successfully",
+    message: 'Product updated successfully',
     data: result,
   });
 });
 
-// hard delete
 const deleteProduct = catchAsync(async (req, res) => {
   const {
     user,
@@ -107,8 +100,7 @@ const deleteProduct = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
-    message: "Product deleted successfully",
+    message: 'Product deleted successfully',
     data: result,
   });
 });
