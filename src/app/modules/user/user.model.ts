@@ -107,3 +107,19 @@ userSchema.statics.isUserExistsByEmail = async function (email: string) {
   return await User.findOne({ email }).select("+password");
 };
 
+userSchema.statics.checkUserExist = async function (userId: string) {
+  const existingUser = await this.findById(userId);
+
+  if (!existingUser) {
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, "User does not exist!");
+  }
+
+  if (!existingUser.isActive) {
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, "User is not active!");
+  }
+
+  return existingUser;
+};
+
+const User = mongoose.model<IUser, UserModel>("User", userSchema);
+export default User;
