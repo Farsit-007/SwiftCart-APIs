@@ -7,3 +7,6 @@ import validateRequest from "../../middleware/validateRequest";
 import { AuthValidation } from "./auth.validation";
 
 const router = Router();
+
+router.post("/login", clientInfoParser, AuthController.loginUser);
+
