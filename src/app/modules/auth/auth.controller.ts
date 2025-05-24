@@ -27,5 +27,18 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { authorization } = req.headers;
+
+  const result = await AuthService.refreshToken(authorization as string);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User logged in successfully!",
+    data: result,
+  });
+});
+
 
 
