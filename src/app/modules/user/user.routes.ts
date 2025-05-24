@@ -24,4 +24,13 @@ router.post(
   validateRequest(UserValidation.userValidationSchema),
   UserController.registerUser
 );
+// update profile
+router.patch(
+  "/update-profile",
+  auth(UserRole.USER),
+  multerUpload.single("profilePhoto"),
+  parseBody,
+  validateRequest(UserValidation.customerInfoValidationSchema),
+  UserController.updateProfile
+);
 
