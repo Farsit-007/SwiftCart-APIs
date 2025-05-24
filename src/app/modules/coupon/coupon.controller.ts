@@ -6,69 +6,71 @@ import { StatusCodes } from 'http-status-codes';
 import { IJwtPayload } from '../auth/auth.interface';
 
 const createCoupon = catchAsync(async (req: Request, res: Response) => {
-   const result = await CouponService.createCoupon(req.body, req.user as IJwtPayload);
+  const result = await CouponService.createCoupon(
+    req.body,
+    req.user as IJwtPayload
+  );
 
-   sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      success: true,
-      message: 'Coupon created successfully',
-      data: result,
-   });
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
+    message: 'Coupon created successfully',
+    data: result,
+  });
 });
 
 const getAllCoupon = catchAsync(async (req: Request, res: Response) => {
-   const result = await CouponService.getAllCoupon(req.query);
+  const result = await CouponService.getAllCoupon(req.query);
 
-   sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: 'Coupon fetched successfully',
-      data: result,
-   });
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Coupon fetched successfully',
+    data: result,
+  });
 });
 
 const updateCoupon = catchAsync(async (req: Request, res: Response) => {
-   const { couponCode } = req.params;
-   const result = await CouponService.updateCoupon(req.body, couponCode);
+  const { couponCode } = req.params;
+  const result = await CouponService.updateCoupon(req.body, couponCode);
 
-   sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: 'Coupon updated successfully',
-      data: result,
-   });
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Coupon updated successfully',
+    data: result,
+  });
 });
 
 const getCouponByCode = catchAsync(async (req: Request, res: Response) => {
-   const { couponCode } = req.params;
-   const { orderAmount, shopId } = req.body;
+  const { couponCode } = req.params;
+  const { orderAmount, shopId } = req.body;
 
-   const result = await CouponService.getCouponByCode(orderAmount, couponCode, shopId);
+  const result = await CouponService.getCouponByCode(
+    orderAmount,
+    couponCode,
+    shopId
+  );
 
-   sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: 'Coupon fetched successfully',
-      data: result,
-   });
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Coupon fetched successfully',
+    data: result,
+  });
 });
 const deleteCoupon = catchAsync(async (req: Request, res: Response) => {
-   const { couponId } = req.params;
+  const { couponId } = req.params;
 
-   const result = await CouponService.deleteCoupon(couponId);
+  const result = await CouponService.deleteCoupon(couponId);
 
-   res.status(StatusCodes.OK).json({
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: result.message,
-      data: null,
-   });
+  res.status(StatusCodes.OK).json({
+    statusCode: StatusCodes.OK,
+    message: result.message,
+    data: null,
+  });
 });
 
 export const couponController = {
-   createCoupon,
-   getAllCoupon,
-   updateCoupon,
-   getCouponByCode,
-   deleteCoupon,
+  createCoupon,
+  getAllCoupon,
+  updateCoupon,
+  getCouponByCode,
+  deleteCoupon,
 };

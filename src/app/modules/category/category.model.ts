@@ -42,9 +42,7 @@ const categorySchema = new Schema<ICategoryDocument>(
       trim: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
 categorySchema.pre<ICategory>('validate', function (next) {
