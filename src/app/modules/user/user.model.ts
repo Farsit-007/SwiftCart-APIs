@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
-import { IUser, UserModel, UserRole } from "./user.interface";
-import bcrypt from "bcrypt";
-import config from "../../config";
-import AppError from "../../errors/appError";
-import { StatusCodes } from "http-status-codes";
+import mongoose, { Schema } from 'mongoose';
+import { IUser, UserModel, UserRole } from './user.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
+import AppError from '../../errors/appError';
+import { StatusCodes } from 'http-status-codes';
 
 // Create the User schema based on the interface
 const userSchema = new Schema<IUser, UserModel>(
@@ -34,7 +34,7 @@ const userSchema = new Schema<IUser, UserModel>(
     clientInfo: {
       device: {
         type: String,
-        enum: ["pc", "mobile"],
+        enum: ['pc', 'mobile'],
         required: true,
       },
       browser: {
@@ -68,12 +68,10 @@ const userSchema = new Schema<IUser, UserModel>(
       default: null,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   const user = this;
 
   user.password = await bcrypt.hash(
@@ -84,12 +82,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.post("save", function (doc, next) {
-  doc.password = "";
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
   next();
 });
 
-userSchema.set("toJSON", {
+userSchema.set('toJSON', {
   transform: (_doc, ret) => {
     delete ret.password;
     return ret;
@@ -104,22 +102,22 @@ userSchema.statics.isPasswordMatched = async function (
 };
 
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  return await User.findOne({ email }).select("+password");
+  return await User.findOne({ email }).select('+password');
 };
 
 userSchema.statics.checkUserExist = async function (userId: string) {
   const existingUser = await this.findById(userId);
 
   if (!existingUser) {
-    throw new AppError(StatusCodes.NOT_ACCEPTABLE, "User does not exist!");
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'User does not exist!');
   }
 
   if (!existingUser.isActive) {
-    throw new AppError(StatusCodes.NOT_ACCEPTABLE, "User is not active!");
+    throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'User is not active!');
   }
 
   return existingUser;
 };
 
-const User = mongoose.model<IUser, UserModel>("User", userSchema);
+const User = mongoose.model<IUser, UserModel>('User', userSchema);
 export default User;

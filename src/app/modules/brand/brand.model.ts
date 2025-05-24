@@ -1,17 +1,17 @@
-import { Schema, model } from "mongoose";
-import { IBrand } from "./brand.interface";
+import { Schema, model } from 'mongoose';
+import { IBrand } from './brand.interface';
 
 const brandSchema = new Schema<IBrand>(
   {
     name: {
       type: String,
-      required: [true, "Brand name is required"],
+      required: [true, 'Brand name is required'],
       unique: true,
       trim: true,
     },
     logo: {
       type: String,
-      required: [true, "Brand logo URL is required"],
+      required: [true, 'Brand logo URL is required'],
     },
     isActive: {
       type: Boolean,
@@ -19,13 +19,11 @@ const brandSchema = new Schema<IBrand>(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
-export const Brand = model<IBrand>("Brand", brandSchema);
+export const Brand = model<IBrand>('Brand', brandSchema);
