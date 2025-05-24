@@ -1,16 +1,16 @@
-import { ClientSession } from "mongoose";
-import { StatusCodes } from "http-status-codes";
-import AppError from "../../errors/appError";
-import User from "../user/user.model";
-import { IAuth, IJwtPayload } from "./auth.interface";
-import { createToken, verifyToken } from "./auth.utils";
-import config from "../../config";
-import mongoose from "mongoose";
-import { JwtPayload, Secret } from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { generateOtp } from "../../utils/generateOtp";
-import { EmailHelper } from "../../utils/emailHelper";
+import { ClientSession } from 'mongoose';
+import { StatusCodes } from 'http-status-codes';
+import AppError from '../../errors/appError';
+import User from '../user/user.model';
+import { IAuth, IJwtPayload } from './auth.interface';
+import { createToken, verifyToken } from './auth.utils';
+import config from '../../config';
+import mongoose from 'mongoose';
+import { JwtPayload, Secret } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { generateOtp } from '../../utils/generateOtp';
+import { EmailHelper } from '../../utils/emailHelper';
 
 const loginUser = async (payload: IAuth) => {
   const session = await mongoose.startSession();
@@ -20,15 +20,15 @@ const loginUser = async (payload: IAuth) => {
 
     const user = await User.findOne({ email: payload.email }).session(session);
     if (!user) {
-      throw new AppError(StatusCodes.NOT_FOUND, "This user is not found!");
+      throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found!');
     }
 
     if (!user.isActive) {
-      throw new AppError(StatusCodes.FORBIDDEN, "This user is not active!");
+      throw new AppError(StatusCodes.FORBIDDEN, 'This user is not active!');
     }
 
     if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
-      throw new AppError(StatusCodes.FORBIDDEN, "Password does not match");
+      throw new AppError(StatusCodes.FORBIDDEN, 'Password does not match');
     }
 
     const jwtPayload: IJwtPayload = {
@@ -75,20 +75,20 @@ const loginUser = async (payload: IAuth) => {
 const refreshToken = async (token: string) => {
   let verifiedToken = null;
   try {
-    verifiedToken = verifyToken(token, config.jwt_refresh_secret as Secret);
+    verifiedToken = verifyToken(token, config.jwt_refresh_secret as string);
   } catch (err) {
-    throw new AppError(StatusCodes.FORBIDDEN, "Invalid Refresh Token");
+    throw new AppError(StatusCodes.FORBIDDEN, 'Invalid Refresh Token');
   }
 
   const { userId } = verifiedToken;
 
   const isUserExist = await User.findById(userId);
   if (!isUserExist) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User does not exist");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User does not exist');
   }
 
   if (!isUserExist.isActive) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active");
+    throw new AppError(StatusCodes.BAD_REQUEST, 'User is not active');
   }
 
   const jwtPayload: IJwtPayload = {
@@ -120,10 +120,10 @@ const changePassword = async (
 
   const user = await User.findOne({ _id: userId });
   if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
   }
   if (!user.isActive) {
-    throw new AppError(StatusCodes.FORBIDDEN, "User account is inactive");
+    throw new AppError(StatusCodes.FORBIDDEN, 'User account is inactive');
   }
 
   // Validate old password
@@ -132,7 +132,7 @@ const changePassword = async (
     user.password
   );
   if (!isOldPasswordCorrect) {
-    throw new AppError(StatusCodes.FORBIDDEN, "Incorrect old password");
+    throw new AppError(StatusCodes.FORBIDDEN, 'Incorrect old password');
   }
 
   // Hash and update the new password
@@ -142,24 +142,24 @@ const changePassword = async (
   );
   await User.updateOne({ _id: userId }, { password: hashedPassword });
 
-  return { message: "Password changed successfully" };
+  return { message: 'Password changed successfully' };
 };
 
 const forgotPassword = async ({ email }: { email: string }) => {
   const user = await User.findOne({ email: email });
 
   if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
   }
 
   if (!user.isActive) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active!");
+    throw new AppError(StatusCodes.BAD_REQUEST, 'User is not active!');
   }
 
   const otp = generateOtp();
 
   const otpToken = jwt.sign({ otp, email }, config.jwt_otp_secret as string, {
-    expiresIn: "5m",
+    expiresIn: '5m',
   });
 
   await User.updateOne({ email }, { otpToken });
@@ -167,16 +167,16 @@ const forgotPassword = async ({ email }: { email: string }) => {
   try {
     const emailContent = await EmailHelper.createEmailContent(
       { otpCode: otp, userName: user.name },
-      "forgotPassword"
+      'forgotPassword'
     );
 
-    await EmailHelper.sendEmail(email, emailContent, "Reset Password OTP");
+    await EmailHelper.sendEmail(email, emailContent, 'Reset Password OTP');
   } catch (error) {
     await User.updateOne({ email }, { $unset: { otpToken: 1 } });
 
     throw new AppError(
       StatusCodes.INTERNAL_SERVER_ERROR,
-      "Failed to send OTP email. Please try again later."
+      'Failed to send OTP email. Please try again later.'
     );
   }
 };
@@ -185,13 +185,13 @@ const verifyOTP = async ({ email, otp }: { email: string; otp: string }) => {
   const user = await User.findOne({ email: email });
 
   if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
   }
 
-  if (!user.otpToken || user.otpToken === "") {
+  if (!user.otpToken || user.otpToken === '') {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "No OTP token found. Please request a new password reset OTP."
+      'No OTP token found. Please request a new password reset OTP.'
     );
   }
 
@@ -201,11 +201,11 @@ const verifyOTP = async ({ email, otp }: { email: string; otp: string }) => {
   );
 
   if (!decodedOtpData) {
-    throw new AppError(StatusCodes.FORBIDDEN, "OTP has expired or is invalid");
+    throw new AppError(StatusCodes.FORBIDDEN, 'OTP has expired or is invalid');
   }
 
   if (decodedOtpData.otp !== otp) {
-    throw new AppError(StatusCodes.FORBIDDEN, "Invalid OTP");
+    throw new AppError(StatusCodes.FORBIDDEN, 'Invalid OTP');
   }
 
   user.otpToken = null;
@@ -248,7 +248,7 @@ const resetPassword = async ({
     }).session(session);
 
     if (!user) {
-      throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+      throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
     }
 
     const hashedPassword = await bcrypt.hash(
@@ -264,7 +264,7 @@ const resetPassword = async ({
     await session.commitTransaction();
 
     return {
-      message: "Password changed successfully",
+      message: 'Password changed successfully',
     };
   } catch (error) {
     await session.abortTransaction();
