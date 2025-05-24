@@ -16,3 +16,9 @@ router.post(
   AuthController.refreshToken
 );
 
+router.post(
+  "/change-password",
+  auth(UserRole.ADMIN, UserRole.USER),
+  AuthController.changePassword
+);
+
