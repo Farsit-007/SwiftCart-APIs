@@ -33,7 +33,7 @@ const initPayment = async (paymentData: {
     success_url: `${config.ssl.validation_url}?tran_id=${tran_id}`,
     fail_url: config.ssl.failed_url as string,
     cancel_url: config.ssl.cancel_url as string,
-    ipn_url: 'http://next-mart-steel.vercel.app/api/v1/ssl/ipn',
+    ipn_url: 'https://khaled-siddique.vercel.app',
     shipping_method: 'Courier',
     product_name: 'N/A.',
     product_category: 'N/A',
