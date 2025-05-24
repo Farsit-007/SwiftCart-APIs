@@ -95,3 +95,32 @@ const myProfile = async (authUser: IJwtPayload) => {
     profile: profile || null,
   };
 };
+
+const updateProfile = async (
+  payload: Partial<ICustomer>,
+  file: IImageFile,
+  authUser: IJwtPayload
+) => {
+  const isUserExists = await User.findById(authUser.userId);
+
+  if (!isUserExists) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found!");
+  }
+  if (!isUserExists.isActive) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active!");
+  }
+
+  if (file && file.path) {
+    payload.photo = file.path;
+  }
+
+  const result = await Customer.findOneAndUpdate(
+    { user: authUser.userId },
+    payload,
+    {
+      new: true,
+    }
+  ).populate("user");
+
+  return result;
+};
