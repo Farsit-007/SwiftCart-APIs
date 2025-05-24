@@ -51,3 +51,18 @@ const myProfile = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const updateProfile = catchAsync(async (req, res) => {
+  const result = await UserServices.updateProfile(
+    req.body,
+    req.file as IImageFile,
+    req.user as IJwtPayload
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: `Profile updated successfully`,
+    data: result,
+  });
+});
