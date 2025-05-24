@@ -181,3 +181,47 @@ const forgotPassword = async ({ email }: { email: string }) => {
   }
 };
 
+const verifyOTP = async ({ email, otp }: { email: string; otp: string }) => {
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  if (!user.otpToken || user.otpToken === "") {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "No OTP token found. Please request a new password reset OTP."
+    );
+  }
+
+  const decodedOtpData = verifyToken(
+    user.otpToken as string,
+    config.jwt_otp_secret as string
+  );
+
+  if (!decodedOtpData) {
+    throw new AppError(StatusCodes.FORBIDDEN, "OTP has expired or is invalid");
+  }
+
+  if (decodedOtpData.otp !== otp) {
+    throw new AppError(StatusCodes.FORBIDDEN, "Invalid OTP");
+  }
+
+  user.otpToken = null;
+  await user.save();
+
+  const resetToken = jwt.sign(
+    { email },
+    config.jwt_pass_reset_secret as string,
+    {
+      expiresIn: config.jwt_pass_reset_expires_in,
+    }
+  );
+
+  // Return the reset token
+  return {
+    resetToken,
+  };
+};
+
