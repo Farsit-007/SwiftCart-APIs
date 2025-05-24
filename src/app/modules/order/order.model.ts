@@ -93,7 +93,7 @@ orderSchema.pre('validate', async function (next) {
 
   let totalAmount = 0;
   let finalDiscount = 0;
-  let shopId: Schema.Types.ObjectId | null = null;
+  let shopId: Types.ObjectId | null = null;
 
   for (let item of order.products) {
     const product = await Product.findById(item.product).populate('shop');
@@ -105,7 +105,6 @@ orderSchema.pre('validate', async function (next) {
       return next(new Error('Products must be from the same shop.'));
     }
 
-    //@ts-ignore
     shopId = product.shop._id;
 
     const offerPrice = (await product?.calculateOfferPrice()) || 0;
@@ -150,8 +149,7 @@ orderSchema.pre('validate', async function (next) {
   order.discount = finalDiscount;
   order.deliveryCharge = deliveryCharge;
   order.finalAmount = totalAmount - finalDiscount + deliveryCharge;
-  //@ts-ignore
-  order.shop = shopId;
+  order.shop = shopId!;
 
   next();
 });

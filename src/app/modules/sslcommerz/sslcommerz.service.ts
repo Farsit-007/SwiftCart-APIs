@@ -1,4 +1,3 @@
-import express, { Request, Response } from 'express';
 import SSLCommerzPayment from 'sslcommerz-lts';
 import config from '../../config';
 import AppError from '../../errors/appError';
@@ -9,7 +8,12 @@ import mongoose from 'mongoose';
 import { generateOrderInvoicePDF } from '../../utils/generateOrderInvoicePDF';
 import { EmailHelper } from '../../utils/emailHelper';
 
-const app = express();
+// generateTransactionId
+const generateTransactionId = (): string => {
+  const timestamp = Date.now().toString().slice(-6);
+  const randomString = Math.random().toString(36).substring(2, 12);
+  return `${timestamp}${randomString}`;
+};
 
 const store_id = config.ssl.store_id as string;
 const store_passwd = config.ssl.store_pass as string;
@@ -84,12 +88,9 @@ const validatePaymentService = async (tran_id: string): Promise<boolean> => {
   session.startTransaction();
 
   try {
-    //@ts-ignore
     const validationResponse = await sslcz.transactionQueryByTransactionId({
       tran_id,
     });
-
-    console.log(validationResponse.element);
 
     let data;
 
@@ -143,8 +144,6 @@ const validatePaymentService = async (tran_id: string): Promise<boolean> => {
     await session.commitTransaction();
     session.endSession();
 
-    console.log('email');
-
     const pdfBuffer = await generateOrderInvoicePDF(updatedOrder);
     const emailContent = await EmailHelper.createEmailContent(
       //@ts-ignore
@@ -178,6 +177,7 @@ const validatePaymentService = async (tran_id: string): Promise<boolean> => {
 };
 
 export const sslService = {
+  generateTransactionId,
   initPayment,
   validatePaymentService,
 };

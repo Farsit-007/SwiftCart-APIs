@@ -2,7 +2,6 @@ import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import os from 'os';
-import { StatusCodes } from 'http-status-codes';
 import router from './app/routes';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import notFound from './app/middleware/notFound';
@@ -46,7 +45,7 @@ app.get('/', (req: Request, res: Response) => {
         'rkrakibhasan680@gmail.com',
         'rajib5570@gmail.com',
         'robayatfarsit@gmail.com',
-        'izemidas@gmail.com',
+        'nazimmuddin10@gmail.com',
       ],
     },
   });

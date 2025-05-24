@@ -3,9 +3,8 @@ import config from '../config';
 import { UserRole } from '../modules/user/user.interface';
 import User from '../modules/user/user.model';
 
-const adminUser = {
+const adminUserBase = {
   email: 'admin@swiftcart.com',
-  password: 'admin123',
   name: 'Khaled',
   role: UserRole.ADMIN,
   clientInfo: {
@@ -24,7 +23,8 @@ const seedAdmin = async () => {
     const isAdminExist = await User.findOne({ role: UserRole.ADMIN });
 
     if (!isAdminExist) {
-      await User.create(adminUser);
+      const hashedPassword = await bcrypt.hash('admin123', Number(config.bcrypt_salt_rounds));
+      await User.create({ ...adminUserBase, password: hashedPassword });
       console.log('Admin user created successfully.');
     } else {
       console.log('Admin user already exists.');

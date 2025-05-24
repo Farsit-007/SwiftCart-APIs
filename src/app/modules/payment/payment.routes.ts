@@ -1,9 +1,34 @@
 import { Router } from 'express';
-import { paymentController } from './payment.controller';
+import { PaymentController } from './payment.controller';
+import { UserRole } from '../user/user.interface';
+import auth from '../../middleware/auth';
+import validateRequest from '../../middleware/validateRequest';
+import { paymentValidation } from './payment.validation';
 
 const router = Router();
 
-// getAllPayments
-router.get('/', paymentController.getAllPayments);
+router.get('/', auth(UserRole.ADMIN), PaymentController.getAllPayments);
 
-export default router;
+router.get('/user', auth(UserRole.USER), PaymentController.getUserPayments);
+
+router.get(
+  '/details/:paymentId',
+  auth(UserRole.USER, UserRole.ADMIN),
+  PaymentController.getPaymentDetails
+);
+
+router.patch(
+  '/:paymentId/status',
+  auth(UserRole.ADMIN),
+  validateRequest(paymentValidation.changePaymentStatusValidationSchema),
+  PaymentController.changePaymentStatus
+);
+
+router.patch(
+  '/validate',
+  auth(UserRole.ADMIN, UserRole.USER),
+  validateRequest(paymentValidation.validatePaymentValidationSchema),
+  PaymentController.validatePayment
+);
+
+export const PaymentRoutes = router;

@@ -5,7 +5,7 @@ import config from '../../config';
 import AppError from '../../errors/appError';
 import { StatusCodes } from 'http-status-codes';
 
-// Create the User schema based on the interface
+// userSchema
 const userSchema = new Schema<IUser, UserModel>(
   {
     name: {
