@@ -145,4 +145,39 @@ const changePassword = async (
   return { message: "Password changed successfully" };
 };
 
+const forgotPassword = async ({ email }: { email: string }) => {
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  if (!user.isActive) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active!");
+  }
+
+  const otp = generateOtp();
+
+  const otpToken = jwt.sign({ otp, email }, config.jwt_otp_secret as string, {
+    expiresIn: "5m",
+  });
+
+  await User.updateOne({ email }, { otpToken });
+
+  try {
+    const emailContent = await EmailHelper.createEmailContent(
+      { otpCode: otp, userName: user.name },
+      "forgotPassword"
+    );
+
+    await EmailHelper.sendEmail(email, emailContent, "Reset Password OTP");
+  } catch (error) {
+    await User.updateOne({ email }, { $unset: { otpToken: 1 } });
+
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      "Failed to send OTP email. Please try again later."
+    );
+  }
+};
 
