@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { customerController } from './customer.controller';
+import { CustomerController } from './customer.controller';
 
 const router = Router();
 
-router.get('/', customerController.getAllCustomers);
+// Define routes
+router.get('/', CustomerController.getAll);
 
 export default router;
