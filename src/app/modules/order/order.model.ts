@@ -5,6 +5,7 @@ import { Coupon } from '../coupon/coupon.model';
 import AppError from '../../errors/appError';
 import { StatusCodes } from 'http-status-codes';
 
+// orderSchema
 const orderSchema = new Schema<IOrder>(
   {
     user: {
@@ -90,12 +91,10 @@ const orderSchema = new Schema<IOrder>(
 orderSchema.pre('validate', async function (next) {
   const order = this;
 
-  // Step 1: Initialize total amount
   let totalAmount = 0;
   let finalDiscount = 0;
   let shopId: Schema.Types.ObjectId | null = null;
 
-  // Step 2: Calculate total amount for products
   for (let item of order.products) {
     const product = await Product.findById(item.product).populate('shop');
 

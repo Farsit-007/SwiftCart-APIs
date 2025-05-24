@@ -7,28 +7,27 @@ import { updateCouponValidationSchema } from './coupon.validation';
 
 const router = Router();
 
-// Define routes
 router.post('/', auth(UserRole.USER), couponController.createCoupon);
 
 router.get('/', auth(UserRole.ADMIN), couponController.getAllCoupon);
 
 router.patch(
-   '/:couponCode/update-coupon',
-   validateRequest(updateCouponValidationSchema),
-   auth(UserRole.ADMIN),
-   couponController.updateCoupon
+  '/:couponCode/update-coupon',
+  validateRequest(updateCouponValidationSchema),
+  auth(UserRole.ADMIN),
+  couponController.updateCoupon
 );
 
 router.post(
-   '/:couponCode',
-   auth(UserRole.ADMIN, UserRole.USER), // Ensure only authorized users can fetch the coupon
-   couponController.getCouponByCode
+  '/:couponCode',
+  auth(UserRole.ADMIN, UserRole.USER),
+  couponController.getCouponByCode
 );
 
 router.delete(
-   '/:couponId',
-   auth(UserRole.ADMIN),
-   couponController.deleteCoupon
+  '/:couponId',
+  auth(UserRole.ADMIN),
+  couponController.deleteCoupon
 );
 
 export const CouponRoutes = router;
