@@ -32,6 +32,8 @@ export interface IUser extends Document {
 export interface UserModel extends Model<IUser> {
   isUserExistsByEmail(email: string): Promise<IUser | null>;
 
+  checkUserExist(userId: string): Promise<IUser | null>;
+
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string

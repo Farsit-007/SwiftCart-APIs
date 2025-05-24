@@ -1,14 +1,17 @@
-import mongoose from "mongoose";
-import { IImageFile } from "../../interface/IImageFile";
-import { IShop } from "./shop.interface";
-import { IJwtPayload } from "../auth/auth.interface";
-import User from "../user/user.model";
-import AppError from "../../errors/appError";
-import { StatusCodes } from "http-status-codes";
-import Shop from "./shop.model";
+import mongoose from 'mongoose';
+import { IImageFile } from '../../interface/IImageFile';
+import { IShop } from './shop.interface';
+import { IJwtPayload } from '../auth/auth.interface';
+import User from '../user/user.model';
+import AppError from '../../errors/appError';
+import { StatusCodes } from 'http-status-codes';
+import Shop from './shop.model';
 
-const createShop = async (shopData: Partial<IShop>, logo: IImageFile, authUser: IJwtPayload) => {
-
+const createShop = async (
+  shopData: Partial<IShop>,
+  logo: IImageFile,
+  authUser: IJwtPayload
+) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -25,12 +28,12 @@ const createShop = async (shopData: Partial<IShop>, logo: IImageFile, authUser: 
     }
 
     if (logo) {
-      shopData.logo = logo.path
+      shopData.logo = logo.path;
     }
 
     const shop = new Shop({
       ...shopData,
-      user: existingUser._id
+      user: existingUser._id,
     });
 
     const createdShop = await shop.save({ session });
@@ -55,15 +58,15 @@ const createShop = async (shopData: Partial<IShop>, logo: IImageFile, authUser: 
 
 const getMyShop = async (authUser: IJwtPayload) => {
   const existingUser = await User.checkUserExist(authUser.userId);
-  if (!existingUser.hasShop) {
-    throw new AppError(StatusCodes.NOT_FOUND, "You have no shop!")
+  if (!existingUser || !existingUser.hasShop) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'You have no shop!');
   }
 
   const shop = await Shop.findOne({ user: existingUser._id }).populate('user');
   return shop;
-}
+};
 
 export const ShopService = {
   createShop,
-  getMyShop
-}
+  getMyShop,
+};
