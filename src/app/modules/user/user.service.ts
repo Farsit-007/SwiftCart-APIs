@@ -62,3 +62,19 @@ const registerUser = async (userData: IUser) => {
     session.endSession();
   }
 };
+
+const getAllUser = async (query: Record<string, unknown>) => {
+  const UserQuery = new QueryBuilder(User.find(), query)
+    .search(UserSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await UserQuery.modelQuery;
+  const meta = await UserQuery.countTotal();
+  return {
+    result,
+    meta,
+  };
+};
