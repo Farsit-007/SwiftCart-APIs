@@ -28,10 +28,10 @@ const sendEmail = async (
 
       // Email configuration
       const mailOptions: any = {
-         from: '"NextMart" <support@nextmart.com>',
-         to: email,
-         subject,
-         html,
+        from: '"SwiftCart" <support@swiftcart.com>',
+        to: email,
+        subject,
+        html,
       };
 
       if (attachment) {
