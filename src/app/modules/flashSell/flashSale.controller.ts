@@ -13,7 +13,6 @@ const createFlashSale = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    success: true,
     message: 'Flash Sale created succesfully',
     data: result,
   });
@@ -26,7 +25,6 @@ const getActiveFlashSalesService = catchAsync(async (req: Request, res: Response
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Flash Sale created succesfully',
     meta: result.meta,
     data: result.result

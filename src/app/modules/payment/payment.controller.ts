@@ -9,7 +9,6 @@ const getAllPayments = async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    success: true,
     message: 'Payments fetched succesfully!',
     data: result,
   });

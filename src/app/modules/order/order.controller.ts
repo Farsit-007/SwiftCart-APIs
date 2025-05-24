@@ -13,7 +13,6 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    success: true,
     message: 'Order created succesfully',
     data: result,
   });
@@ -27,7 +26,6 @@ const getMyShopOrders = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Order retrive succesfully',
     data: result.result,
     meta: result.meta,
@@ -39,7 +37,6 @@ const getOrderDetails = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Order retrive succesfully',
     data: result,
   });
@@ -53,7 +50,6 @@ const getMyOrders = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Order retrive succesfully',
     data: result.result,
     meta: result.meta,
@@ -70,7 +66,6 @@ const changeOrderStatus = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Order status changed succesfully',
     data: result,
   });

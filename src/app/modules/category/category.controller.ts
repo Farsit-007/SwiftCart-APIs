@@ -8,7 +8,6 @@ import { IUser } from '../user/user.interface';
 import { IJwtPayload } from '../auth/auth.interface';
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
-
   const result = await CategoryService.createCategory(
     req.body,
     req.file as IImageFile,
@@ -17,7 +16,6 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Category created succesfully',
     data: result,
   });
@@ -28,7 +26,6 @@ const getAllCategory = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'category are retrieved succesfully',
     meta: result.meta,
     data: result.result,
@@ -46,7 +43,6 @@ const updateCategory = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'category is updated succesfully',
     data: result,
   });
@@ -61,7 +57,6 @@ const deleteCategory = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Category is deleted successfully',
     data: result,
   });
@@ -71,5 +66,5 @@ export const CategoryController = {
   createCategory,
   getAllCategory,
   updateCategory,
-  deleteCategory
-}
+  deleteCategory,
+};
