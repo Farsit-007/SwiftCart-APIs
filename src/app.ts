@@ -27,7 +27,7 @@ app.get('/', (req: Request, res: Response) => {
   const serverUptime = os.uptime();
   res.send({
     success: true,
-    message: 'Welcome to ThinkGreenly Server',
+    message: 'Welcome to SwiftCart Server',
     version: '1.0.0',
     clientDetails: {
       ipAddress: clientIp,
