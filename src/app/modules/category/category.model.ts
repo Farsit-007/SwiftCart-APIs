@@ -1,21 +1,21 @@
-import { Schema, model, Document, Types } from "mongoose";
-import { ICategory } from "./category.interface";
+import { Schema, model, Document, Types } from 'mongoose';
+import { ICategory } from './category.interface';
 
-// Extend Mongoose Document with ICategory
-interface ICategoryDocument extends Document, ICategory { }
+// ICategoryDocument
+interface ICategoryDocument extends Document, ICategory {}
 
-// Define the schema
+// categorySchema
 const categorySchema = new Schema<ICategoryDocument>(
   {
     name: {
       type: String,
-      required: [true, "Category name is required"],
+      required: [true, 'Category name is required'],
       unique: true,
       trim: true,
     },
     slug: {
       type: String,
-      required: [true, "Category slug is required"],
+      required: [true, 'Category slug is required'],
       unique: true,
       trim: true,
     },
@@ -25,7 +25,7 @@ const categorySchema = new Schema<ICategoryDocument>(
     },
     parent: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
+      ref: 'Category',
       default: null,
     },
     isActive: {
@@ -34,7 +34,7 @@ const categorySchema = new Schema<ICategoryDocument>(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     icon: {
@@ -47,13 +47,16 @@ const categorySchema = new Schema<ICategoryDocument>(
   }
 );
 
-categorySchema.pre<ICategory>("validate", function (next) {
+categorySchema.pre<ICategory>('validate', function (next) {
   if (this instanceof Document) {
-    if (this.isModified("name") && !this.slug) {
-      this.slug = this.name.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    if (this.isModified('name') && !this.slug) {
+      this.slug = this.name
+        .toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/[^\w-]+/g, '');
     }
   }
   next();
 });
 
-export const Category = model<ICategoryDocument>("Category", categorySchema);
+export const Category = model<ICategoryDocument>('Category', categorySchema);

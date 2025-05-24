@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IPayment } from './payment.interface';
 
+// paymentSchema
 const paymentSchema = new Schema<IPayment>(
   {
     user: {

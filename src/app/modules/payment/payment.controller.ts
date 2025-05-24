@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { paymentService } from './payment.service';
 
-const getAll = async (req: Request, res: Response) => {
-  const data = await paymentService.getAll();
+const getAllPayments = async (req: Request, res: Response) => {
+  const data = await paymentService.getAllPaymentsFromDB();
   res.json(data);
 };
 
 export const paymentController = {
-  getAll,
+  getAllPayments,
 };

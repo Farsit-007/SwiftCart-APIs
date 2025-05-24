@@ -1,6 +1,8 @@
+import { Payment } from './payment.model';
+
 export const paymentService = {
-  async getAll() {
-    // Example service logic
-    return [{ message: 'Service logic here' }];
+  async getAllPaymentsFromDB() {
+    const payments = await Payment.find();
+    return payments;
   },
 };
