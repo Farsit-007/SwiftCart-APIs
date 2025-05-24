@@ -111,4 +111,38 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const changePassword = async (
+  userData: JwtPayload,
+  payload: { oldPassword: string; newPassword: string }
+) => {
+  const { userId } = userData;
+  const { oldPassword, newPassword } = payload;
+
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+  if (!user.isActive) {
+    throw new AppError(StatusCodes.FORBIDDEN, "User account is inactive");
+  }
+
+  // Validate old password
+  const isOldPasswordCorrect = await User.isPasswordMatched(
+    oldPassword,
+    user.password
+  );
+  if (!isOldPasswordCorrect) {
+    throw new AppError(StatusCodes.FORBIDDEN, "Incorrect old password");
+  }
+
+  // Hash and update the new password
+  const hashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds)
+  );
+  await User.updateOne({ _id: userId }, { password: hashedPassword });
+
+  return { message: "Password changed successfully" };
+};
+
 
