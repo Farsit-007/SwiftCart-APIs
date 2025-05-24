@@ -3,7 +3,7 @@ import { paymentController } from './payment.controller';
 
 const router = Router();
 
-// Define routes
-router.get('/', paymentController.getAll);
+// getAllPayments
+router.get('/', paymentController.getAllPayments);
 
 export default router;

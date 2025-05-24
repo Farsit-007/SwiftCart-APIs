@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 
+// IPayment
 export interface IPayment {
   user: Types.ObjectId;
   order: Types.ObjectId;
