@@ -34,3 +34,10 @@ router.patch(
   UserController.updateProfile
 );
 
+router.patch(
+  "/:id/status",
+  auth(UserRole.ADMIN),
+  UserController.updateUserStatus
+);
+
+export const UserRoutes = router;
