@@ -40,3 +40,14 @@ const getAllUser = catchAsync(async (req, res) => {
     data: result.result,
   });
 });
+
+const myProfile = catchAsync(async (req, res) => {
+  const result = await UserServices.myProfile(req.user as IJwtPayload);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Profile retrieved successfully",
+    data: result,
+  });
+});
