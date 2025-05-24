@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { IJwtPayload } from '../auth/auth.interface';
 import { BrandService } from './brand.service';
 
+//create brand
 const createBrand = catchAsync(async (req: Request, res: Response) => {
    const result = await BrandService.createBrand(
       req.body,
