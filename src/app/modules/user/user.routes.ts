@@ -18,4 +18,10 @@ router.get(
   UserController.myProfile
 );
 
+router.post(
+  "/",
+  clientInfoParser,
+  validateRequest(UserValidation.userValidationSchema),
+  UserController.registerUser
+);
 
