@@ -225,3 +225,60 @@ const verifyOTP = async ({ email, otp }: { email: string; otp: string }) => {
   };
 };
 
+const resetPassword = async ({
+  token,
+  newPassword,
+}: {
+  token: string;
+  newPassword: string;
+}) => {
+  const session: ClientSession = await User.startSession();
+
+  try {
+    session.startTransaction();
+
+    const decodedData = verifyToken(
+      token as string,
+      config.jwt_pass_reset_secret as string
+    );
+
+    const user = await User.findOne({
+      email: decodedData.email,
+      isActive: true,
+    }).session(session);
+
+    if (!user) {
+      throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      String(newPassword),
+      Number(config.bcrypt_salt_rounds)
+    );
+
+    await User.updateOne(
+      { email: user.email },
+      { password: hashedPassword }
+    ).session(session);
+
+    await session.commitTransaction();
+
+    return {
+      message: "Password changed successfully",
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
+};
+
+export const AuthService = {
+  loginUser,
+  refreshToken,
+  changePassword,
+  forgotPassword,
+  verifyOTP,
+  resetPassword,
+};
