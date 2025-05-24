@@ -50,7 +50,7 @@ const auth = (...requiredRoles: UserRole[]) => {
       );
     }
 
-    req.user = decoded as JwtPayload;
+    req.user = { ...decoded, _id: user._id } as JwtPayload;
     next();
   });
 };
