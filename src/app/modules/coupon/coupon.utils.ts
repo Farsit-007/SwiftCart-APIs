@@ -1,4 +1,5 @@
-import { ICoupon } from './coupon.interface';
+import { ICoupon } from "./coupon.interface";
+
 
 export const calculateDiscount = (
    coupon: ICoupon,
