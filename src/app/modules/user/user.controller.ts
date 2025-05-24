@@ -66,3 +66,23 @@ const updateProfile = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const updateUserStatus = catchAsync(async (req, res) => {
+  const userId = req.params.id;
+  const result = await UserServices.updateUserStatus(userId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: `User is now ${result.isActive ? "active" : "inactive"}`,
+    data: result,
+  });
+});
+
+export const UserController = {
+  registerUser,
+  getAllUser,
+  myProfile,
+  updateUserStatus,
+  updateProfile,
+};
