@@ -1,5 +1,5 @@
 {
-  "name": "swiftcart-server",
+  "name": "swiftcart-apis",
   "description": "A fast and lightweight e-commerce platform built with MongoDB, NodeJS, ExpressJS and ReactJS.",
   "keywords": [
     "ecommerce",
