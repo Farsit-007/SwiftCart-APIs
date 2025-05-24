@@ -23,3 +23,4 @@ router.post(
 );
 
 router.post("/forgot-password", AuthController.forgotPassword);
+router.post("/verify-otp", AuthController.verifyOTP);
