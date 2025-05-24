@@ -15,26 +15,22 @@ const createShop = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
-    success: true,
     message: 'Shop created successfully!',
-    data: result
+    data: result,
   });
 });
 
 const getMyShop = catchAsync(async (req: Request, res: Response) => {
-  const result = await ShopService.getMyShop(
-    req.user as IJwtPayload
-  );
+  const result = await ShopService.getMyShop(req.user as IJwtPayload);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    success: true,
     message: 'Shop retrive successfully!',
-    data: result
+    data: result,
   });
 });
 
 export const ShopController = {
   createShop,
-  getMyShop
-}
+  getMyShop,
+};

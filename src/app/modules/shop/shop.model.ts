@@ -1,5 +1,5 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-import { IShop } from "./shop.interface";
+import mongoose, { Schema, Document, Model } from 'mongoose';
+import { IShop } from './shop.interface';
 
 const shopSchema = new Schema<IShop>(
   {
@@ -26,7 +26,7 @@ const shopSchema = new Schema<IShop>(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       default: null,
     },
     servicesOffered: {
@@ -62,10 +62,9 @@ const shopSchema = new Schema<IShop>(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true, versionKey: false }
 );
 
-const Shop: Model<IShop> = mongoose.model<IShop>("Shop", shopSchema);
+const Shop: Model<IShop> = mongoose.model<IShop>('Shop', shopSchema);
+
 export default Shop;
