@@ -22,6 +22,9 @@ const userSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
     },
+    passwordChangedAt: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: [UserRole.ADMIN, UserRole.USER],
@@ -94,6 +97,12 @@ userSchema.set('toJSON', {
   },
 });
 
+// isUserExistsByEmail
+userSchema.statics.isUserExistsByEmail = async function (email: string) {
+  return await User.findOne({ email }).select('+password'); // will show the password
+};
+
+// isPasswordMatched
 userSchema.statics.isPasswordMatched = async function (
   plainTextPassword,
   hashedPassword
@@ -101,8 +110,14 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
-userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  return await User.findOne({ email }).select('+password');
+// isJWTIssuedBeforePasswordChanged
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimestamp: Date,
+  jwtIssuedTimestamp: number
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimestamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimestamp;
 };
 
 userSchema.statics.checkUserExist = async function (userId: string) {
