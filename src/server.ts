@@ -33,7 +33,7 @@ function gracefulShutdown(signal: string) {
 async function bootstrap() {
    try {
       await connectToDatabase();
-      //await seed();
+      // await seed();
 
       server = app.listen(config.port, () => {
          console.log(
