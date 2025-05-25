@@ -23,15 +23,15 @@ const customerSchema = new Schema<ICustomer>(
     address: {
       type: String,
     },
-    photo: {
-      type: String,
-      validate: {
-        validator: function (v: string) {
-          return /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))/.test(v);
-        },
-        message: 'Invalid photo URL format.',
-      },
-    },
+    // photo: {
+    //   type: String,
+    //   validate: {
+    //     validator: function (v: string) {
+    //       return /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))/.test(v);
+    //     },
+    //     message: 'Invalid photo URL format.',
+    //   },
+    // },
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',

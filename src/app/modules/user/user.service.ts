@@ -111,7 +111,8 @@ const updateProfile = async (
   }
 
   if (file && file.path) {
-    payload.photo = file.path;
+    isUserExists.profilePhoto = file.path;
+    await isUserExists.save();
   }
 
   const result = await Customer.findOneAndUpdate(
