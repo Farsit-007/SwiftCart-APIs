@@ -9,7 +9,7 @@ const router = Router();
 
 router.post('/', auth(UserRole.USER), couponController.createCoupon);
 
-router.get('/', auth(UserRole.ADMIN), couponController.getAllCoupon);
+router.get('/', auth(UserRole.ADMIN,UserRole.USER), couponController.getAllCoupon);
 
 router.patch(
   '/:couponCode/update-coupon',
