@@ -23,11 +23,20 @@ const userValidationSchema = z.object({
 const customerInfoValidationSchema = z.object({
   body: z
     .object({
+      name: z
+        .string({
+          invalid_type_error: 'Name must be string!',
+        })
+        .trim()
+        .optional(),
+
       phoneNo: z
         .string()
         .regex(/^\d{11}$/, 'Phone number must be exactly 11 digits long')
         .optional(),
+
       gender: z.enum(['Male', 'Female', 'Other']).default('Other').optional(),
+
       dateOfBirth: z
         .string()
         .optional()
@@ -35,14 +44,20 @@ const customerInfoValidationSchema = z.object({
           message: 'Invalid date format. Must be a valid date.',
         })
         .optional(),
-      address: z.string().optional(),
-      profilePhoto: z
-        .string()
-        .regex(
-          /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))$/,
-          'Invalid photo URL format. Must be a valid image URL.'
-        )
+
+      address: z
+        .string({
+          invalid_type_error: 'Address must be string!',
+        })
         .optional(),
+
+      // profilePhoto: z
+      //   .string()
+      //   .regex(
+      //     /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))$/,
+      //     'Invalid photo URL format. Must be a valid image URL.'
+      //   )
+      //   .optional(),
     })
     .strict(),
 });
