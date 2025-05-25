@@ -8,8 +8,8 @@ const validateRequest = (schema: AnyZodObject) => {
       body: req.body,
       cookies: req.cookies,
     });
-    req.body = result.body;
 
+    req.body = result.body;
     next();
   });
 };
