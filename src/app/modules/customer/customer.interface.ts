@@ -5,6 +5,6 @@ export interface ICustomer extends Document {
   gender?: 'Male' | 'Female' | 'Other';
   dateOfBirth?: string;
   address?: string;
-  photo?: string; // Assuming the photo is stored as a URL or path
+  // photo?: string; // Assuming the photo is stored as a URL or path
   user?: IUser['_id'];
 }
