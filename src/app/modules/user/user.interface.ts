@@ -12,6 +12,7 @@ export interface IUser extends Document {
   password: string;
   passwordChangedAt?: Date;
   name: string;
+  profilePhoto?: string;
   role: UserRole;
   hasShop: boolean;
   clientInfo: {
