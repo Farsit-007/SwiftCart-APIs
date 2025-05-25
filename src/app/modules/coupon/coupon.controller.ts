@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { IJwtPayload } from '../auth/auth.interface';
 
 const createCoupon = catchAsync(async (req: Request, res: Response) => {
+  console.log('req.body', req.body);
   const result = await CouponService.createCoupon(
     req.body,
     req.user as IJwtPayload
@@ -19,7 +20,8 @@ const createCoupon = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllCoupon = catchAsync(async (req: Request, res: Response) => {
-  const result = await CouponService.getAllCoupon(req.query);
+   const user= req.user;
+  const result = await CouponService.getAllCoupon(req.query,user);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
