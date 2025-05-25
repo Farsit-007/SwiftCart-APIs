@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { Document, Types } from 'mongoose';
 
 export interface ICoupon extends Document {

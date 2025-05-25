@@ -1,12 +1,14 @@
 import { StatusCodes } from 'http-status-codes';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/appError';
-import { ICoupon } from './coupon.interface';
 import { Coupon } from './coupon.model';
 import { calculateDiscount } from './coupon.utils';
 import { IJwtPayload } from '../auth/auth.interface';
 import User from '../user/user.model';
 import Shop from '../shop/shop.model';
+import { JwtPayload } from 'jsonwebtoken';
+import { startSession } from 'mongoose';
+import { ICoupon } from './coupon.interface';
 
 const createCoupon = async (
   couponData: Partial<ICoupon>,
@@ -40,21 +42,47 @@ const createCoupon = async (
   return await coupon.save();
 };
 
-const getAllCoupon = async (query: Record<string, unknown>) => {
-  const brandQuery = new QueryBuilder(Coupon.find(), query)
-    .search(['code'])
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
 
-  const result = await brandQuery.modelQuery;
-  const meta = await brandQuery.countTotal();
 
-  return {
-    meta,
-    result,
-  };
+export const getAllCoupon = async (query: Record<string, unknown>,user:JwtPayload) => {
+
+  const session = await startSession();
+  session.startTransaction();
+
+  try {
+    let filter: Record<string, unknown> = {};
+
+    // If not admin, find associated shop
+    if (user?.role !== 'admin') {
+      const shop = await Shop.findOne({ user: user.userId }).session(session);
+      if (!shop) throw new Error("Shop not found for this user.");
+      filter.shop = shop._id;
+    }
+
+    // Build the query with optional filters
+    const couponQuery = Coupon.find(filter).session(session);
+    const queryBuilder = new QueryBuilder(couponQuery, query)
+      .search(['code'])
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+
+    const result = await queryBuilder.modelQuery;
+    const meta = await queryBuilder.countTotal();
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      meta,
+      result,
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
 const updateCoupon = async (payload: Partial<ICoupon>, couponCode: string) => {
