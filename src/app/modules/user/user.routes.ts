@@ -31,7 +31,7 @@ router.patch(
   auth(UserRole.USER),
   multerUpload.single("profilePhoto"),
   parseBody,
-  // validateRequest(UserValidation.customerInfoValidationSchema),
+  validateRequest(UserValidation.customerInfoValidationSchema),
   UserController.updateProfile
 );
 
