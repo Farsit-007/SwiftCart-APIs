@@ -101,10 +101,7 @@ const updateProfile = async (
   file: IImageFile,
   authUser: IJwtPayload
 ) => {
-  console.log({ payload, file, authUser });
   const isUserExists = await User.findById(authUser.userId);
-
-  console.log({ isUserExists });
 
   if (!isUserExists) {
     throw new AppError(StatusCodes.NOT_FOUND, 'User not found!');
