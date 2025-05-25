@@ -97,11 +97,14 @@ const myProfile = async (authUser: IJwtPayload) => {
 };
 
 const updateProfile = async (
-  payload: Partial<ICustomer>,
+  payload: Partial<ICustomer> & { name?: string },
   file: IImageFile,
   authUser: IJwtPayload
 ) => {
+  console.log({ payload, file, authUser });
   const isUserExists = await User.findById(authUser.userId);
+
+  console.log({ isUserExists });
 
   if (!isUserExists) {
     throw new AppError(StatusCodes.NOT_FOUND, 'User not found!');
@@ -112,8 +115,10 @@ const updateProfile = async (
 
   if (file && file.path) {
     isUserExists.profilePhoto = file.path;
-    await isUserExists.save();
   }
+
+  isUserExists.name = payload.name!;
+  await isUserExists.save();
 
   const result = await Customer.findOneAndUpdate(
     { user: authUser.userId },
