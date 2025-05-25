@@ -2,7 +2,7 @@ import { z } from "zod";
 import { UserRole } from "./user.interface";
 
 const clientInfoSchema = z.object({
-  device: z.enum(["pc", "mobile"]).optional().default("pc"), // Allow only 'pc' or 'mobile'
+  device: z.enum(["pc", "mobile"]).optional().default("pc"), 
   browser: z.string().min(1, "Browser name is required"),
   ipAddress: z.string().min(1, "IP address is required"),
   pcName: z.string().optional(), // Optional field
@@ -20,34 +20,34 @@ const userValidationSchema = z.object({
   }),
 });
 
-const customerInfoValidationSchema = z.object({
-  body: z
-    .object({
-      phoneNo: z
-        .string()
-        .regex(/^\d{11}$/, "Phone number must be exactly 11 digits long")
-        .optional(),
-      gender: z.enum(["Male", "Female", "Other"]).default("Other").optional(),
-      dateOfBirth: z
-        .string()
-        .optional()
-        .refine((value) => !value || !isNaN(Date.parse(value)), {
-          message: "Invalid date format. Must be a valid date.",
-        })
-        .optional(),
-      address: z.string().optional(),
-      photo: z
-        .string()
-        .regex(
-          /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))$/,
-          "Invalid photo URL format. Must be a valid image URL."
-        )
-        .optional(),
-    })
-    .strict(),
-});
+// const customerInfoValidationSchema = z.object({
+//   body: z
+//     .object({
+//       phoneNo: z
+//         .string()
+//         .regex(/^\d{11}$/, "Phone number must be exactly 11 digits long")
+//         .optional(),
+//       gender: z.enum(["Male", "Female", "Other"]).default("Other").optional(),
+//       dateOfBirth: z
+//         .string()
+//         .optional()
+//         .refine((value) => !value || !isNaN(Date.parse(value)), {
+//           message: "Invalid date format. Must be a valid date.",
+//         })
+//         .optional(),
+//       address: z.string().optional(),
+//       profilePhoto: z
+//         .string()
+//         .regex(
+//           /^(http(s)?:\/\/.*\.(?:png|jpg|jpeg))$/,
+//           "Invalid photo URL format. Must be a valid image URL."
+//         )
+//         .optional(),
+//     })
+//     .strict(),
+// });
 
 export const UserValidation = {
   userValidationSchema,
-  customerInfoValidationSchema,
+  // customerInfoValidationSchema,
 };
