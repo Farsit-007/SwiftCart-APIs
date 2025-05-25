@@ -16,15 +16,26 @@ const createShop = async (
   session.startTransaction();
 
   try {
-    // Check if the user already exists by email
+    // Check if the user exists and is active
     const existingUser = await User.findById(authUser.userId).session(session);
 
     if (!existingUser) {
-      throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'User is not exists!');
+      throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'User does not exist!');
     }
 
     if (!existingUser.isActive) {
       throw new AppError(StatusCodes.NOT_ACCEPTABLE, 'User is not active!');
+    }
+
+    // Check if user already has a shop
+    if (existingUser.hasShop) {
+      throw new AppError(StatusCodes.CONFLICT, 'User already has a shop!');
+    }
+
+    // Check if a shop already exists for this user (additional safety check)
+    const existingShop = await Shop.findOne({ user: existingUser._id }).session(session);
+    if (existingShop) {
+      throw new AppError(StatusCodes.CONFLICT, 'Shop already exists for this user!');
     }
 
     if (logo) {
@@ -38,6 +49,7 @@ const createShop = async (
 
     const createdShop = await shop.save({ session });
 
+    // Update user's hasShop flag
     await User.findByIdAndUpdate(
       existingUser._id,
       { hasShop: true },
@@ -66,7 +78,91 @@ const getMyShop = async (authUser: IJwtPayload) => {
   return shop;
 };
 
+const getAllShops = async (query: Record<string, unknown>) => {
+  // Build the query
+  const shopQuery = Shop.find().populate('user');
+
+  // Filtering
+  if (query?.searchTerm) {
+    shopQuery.find({
+      $or: [
+        { name: { $regex: query.searchTerm, $options: 'i' } },
+        { description: { $regex: query.searchTerm, $options: 'i' } }
+      ]
+    });
+  }
+
+  // Sorting
+  if (query?.sortBy || query?.sortOrder) {
+    const sortOptions: Record<string, 1 | -1> = {};
+    sortOptions[query.sortBy as string] = query.sortOrder === 'desc' ? -1 : 1;
+    shopQuery.sort(sortOptions);
+  }
+
+  // Pagination
+  if (query?.page || query?.limit) {
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+    shopQuery.skip(skip).limit(limit);
+  }
+
+  const shops = await shopQuery.exec();
+  return shops;
+};
+
+const deleteShop = async (id: string, authUser: IJwtPayload) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Find the shop with user population
+    const shop = await Shop.findOne({ _id: id })
+      .populate('user')
+      .session(session);
+
+    if (!shop) {
+      throw new AppError(StatusCodes.NOT_FOUND, 'Shop not found');
+    }
+    
+    // Check permissions
+  
+    const isOwner = shop.user?._id.toString() === authUser.userId;
+    
+    const isAdmin = authUser.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      throw new AppError(
+        StatusCodes.FORBIDDEN, 
+        'You are not authorized to delete this shop'
+      );
+    }
+
+    // Delete the shop
+    const deletedShop = await Shop.findByIdAndDelete(id, { session });
+
+    // Update user's hasShop status if they're the owner
+    if (isOwner) {
+      await User.findByIdAndUpdate(
+        authUser.userId,
+        { hasShop: false },
+        { new: true, session }
+      );
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return deletedShop;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
 export const ShopService = {
   createShop,
   getMyShop,
+  getAllShops,
+  deleteShop
 };

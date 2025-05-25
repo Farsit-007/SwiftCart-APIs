@@ -25,4 +25,7 @@ router.post(
     ShopController.createShop
 )
 
+router.get('/',auth(UserRole.ADMIN) ,ShopController.getAllShops)
+router.delete('/:id',auth(UserRole.ADMIN, UserRole.USER), ShopController.deleteShop)
+
 export const ShopRoutes = router;

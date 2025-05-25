@@ -11,6 +11,7 @@ import { ShopRoutes } from '../modules/shop/shop.routes';
 import { ReviewRoutes } from '../modules/review/review.routes';
 import { FlashSaleRoutes } from '../modules/flashSell/flashSale.routes';
 import { MetaRoutes } from '../modules/meta/meta.route';
+import { PaymentRoutes } from '../modules/payment/payment.routes';
 
 const router = Router();
 
@@ -62,6 +63,10 @@ const moduleRoutes = [
    {
       path: '/meta',
       route: MetaRoutes,
+   },
+    {
+      path: '/payment',
+      route: PaymentRoutes,
    },
 ];
 
