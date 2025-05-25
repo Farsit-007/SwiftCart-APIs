@@ -117,17 +117,15 @@ const deleteShop = async (id: string, authUser: IJwtPayload) => {
 
   try {
     // Find the shop with user population
-    const shop = await Shop.findOne({ _id: id })
-      .populate('user')
-      .session(session);
+    const shop = await Shop.findOne({ _id: id }).session(session);
 
     if (!shop) {
       throw new AppError(StatusCodes.NOT_FOUND, 'Shop not found');
     }
     
     // Check permissions
-  
-    const isOwner = shop.user?._id.toString() === authUser.userId;
+    console.log('shop user', shop.user);
+    const isOwner = shop.user?.toString() === authUser.userId;
     
     const isAdmin = authUser.role === 'admin';
 
