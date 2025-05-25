@@ -19,7 +19,8 @@ const createCoupon = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllCoupon = catchAsync(async (req: Request, res: Response) => {
-  const result = await CouponService.getAllCoupon(req.query);
+   const user= req.user;
+  const result = await CouponService.getAllCoupon(req.query,user);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
