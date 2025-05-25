@@ -18,11 +18,14 @@ router.get(
 
 router.post(
     '/',
-    auth(UserRole.USER),
+    auth(UserRole.USER, UserRole.ADMIN),
     multerUpload.single('logo'),
     parseBody,
     validateRequest(ShopValidation.createShopValidation),
     ShopController.createShop
 )
+
+router.get('/',auth(UserRole.ADMIN) ,ShopController.getAllShops)
+router.delete('/:id',auth(UserRole.ADMIN, UserRole.USER), ShopController.deleteShop)
 
 export const ShopRoutes = router;
