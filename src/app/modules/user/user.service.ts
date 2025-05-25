@@ -1,15 +1,15 @@
-import { IUser, UserRole } from "./user.interface";
-import User from "./user.model";
-import AppError from "../../errors/appError";
-import { StatusCodes } from "http-status-codes";
-import QueryBuilder from "../../builder/QueryBuilder";
-import { UserSearchableFields } from "./user.constant";
-import Customer from "../customer/customer.model";
-import mongoose from "mongoose";
-import { IImageFile } from "../../interface/IImageFile";
-import { AuthService } from "../auth/auth.service";
-import { ICustomer } from "../customer/customer.interface";
-import { IJwtPayload } from "../auth/auth.interface";
+import { IUser, UserRole } from './user.interface';
+import User from './user.model';
+import AppError from '../../errors/appError';
+import { StatusCodes } from 'http-status-codes';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { UserSearchableFields } from './user.constant';
+import Customer from '../customer/customer.model';
+import mongoose from 'mongoose';
+import { IImageFile } from '../../interface/IImageFile';
+import { AuthService } from '../auth/auth.service';
+import { ICustomer } from '../customer/customer.interface';
+import { IJwtPayload } from '../auth/auth.interface';
 
 // Function to register user
 const registerUser = async (userData: IUser) => {
@@ -21,7 +21,7 @@ const registerUser = async (userData: IUser) => {
     if ([UserRole.ADMIN].includes(userData.role)) {
       throw new AppError(
         StatusCodes.NOT_ACCEPTABLE,
-        "Invalid role. Only User is allowed."
+        'Invalid role. Only User is allowed.'
       );
     }
 
@@ -32,7 +32,7 @@ const registerUser = async (userData: IUser) => {
     if (existingUser) {
       throw new AppError(
         StatusCodes.NOT_ACCEPTABLE,
-        "Email is already registered"
+        'Email is already registered'
       );
     }
 
@@ -82,10 +82,10 @@ const getAllUser = async (query: Record<string, unknown>) => {
 const myProfile = async (authUser: IJwtPayload) => {
   const isUserExists = await User.findById(authUser.userId);
   if (!isUserExists) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found!");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found!');
   }
   if (!isUserExists.isActive) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active!");
+    throw new AppError(StatusCodes.BAD_REQUEST, 'User is not active!');
   }
 
   const profile = await Customer.findOne({ user: isUserExists._id });
@@ -104,10 +104,10 @@ const updateProfile = async (
   const isUserExists = await User.findById(authUser.userId);
 
   if (!isUserExists) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found!");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found!');
   }
   if (!isUserExists.isActive) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "User is not active!");
+    throw new AppError(StatusCodes.BAD_REQUEST, 'User is not active!');
   }
 
   if (file && file.path) {
@@ -120,7 +120,7 @@ const updateProfile = async (
     {
       new: true,
     }
-  ).populate("user");
+  ).populate('user');
 
   return result;
 };
@@ -128,9 +128,8 @@ const updateProfile = async (
 const updateUserStatus = async (userId: string) => {
   const user = await User.findById(userId);
 
-  console.log("comes here");
   if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User is not found");
+    throw new AppError(StatusCodes.NOT_FOUND, 'User is not found');
   }
 
   user.isActive = !user.isActive;

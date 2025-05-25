@@ -9,7 +9,11 @@ import { categoryValidation } from './category.validation';
 
 const router = Router();
 
-router.get("/", CategoryController.getAllCategory)
+router.get(
+  '/',
+  auth(UserRole.ADMIN, UserRole.USER),
+  CategoryController.getAllCategory
+);
 
 router.post(
     '/',

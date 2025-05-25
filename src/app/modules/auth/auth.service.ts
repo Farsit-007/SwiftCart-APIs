@@ -6,7 +6,7 @@ import { IAuth, IJwtPayload } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
 import config from '../../config';
 import mongoose from 'mongoose';
-import { JwtPayload, Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { generateOtp } from '../../utils/generateOtp';
@@ -35,6 +35,7 @@ const loginUser = async (payload: IAuth) => {
       userId: user._id as string,
       name: user.name as string,
       email: user.email as string,
+      profilePhoto: user.profilePhoto as string,
       hasShop: user.hasShop,
       isActive: user.isActive,
       role: user.role,
@@ -52,7 +53,7 @@ const loginUser = async (payload: IAuth) => {
       config.jwt_refresh_expires_in as string
     );
 
-    const updateUserInfo = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       user._id,
       { clientInfo: payload.clientInfo, lastLogin: Date.now() },
       { new: true, session }
@@ -95,6 +96,7 @@ const refreshToken = async (token: string) => {
     userId: isUserExist._id as string,
     name: isUserExist.name as string,
     email: isUserExist.email as string,
+    profilePhoto: isUserExist.profilePhoto as string,
     hasShop: isUserExist.hasShop,
     isActive: isUserExist.isActive,
     role: isUserExist.role,
@@ -112,7 +114,7 @@ const refreshToken = async (token: string) => {
 };
 
 const changePassword = async (
-  userData: JwtPayload,
+  userData: IJwtPayload,
   payload: { oldPassword: string; newPassword: string }
 ) => {
   const { userId } = userData;
