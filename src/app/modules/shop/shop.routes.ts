@@ -18,7 +18,7 @@ router.get(
 
 router.post(
     '/',
-    auth(UserRole.USER),
+    auth(UserRole.USER, UserRole.ADMIN),
     multerUpload.single('logo'),
     parseBody,
     validateRequest(ShopValidation.createShopValidation),
