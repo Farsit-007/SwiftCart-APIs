@@ -4,23 +4,53 @@ import { StatusCodes } from 'http-status-codes';
 import AppError from '../../errors/appError';
 import { Order } from '../order/order.model';
 import { IJwtPayload } from '../auth/auth.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 // get All Payments
-const getAllPaymentsFromDB = async () => {
-  const result = await Payment.find().populate(
-    'user order shop shop.products.product'
-  );
+const getAllPaymentsFromDB = async (query: Record<string, unknown>) => {
+  const paymentQuery = new QueryBuilder(
+    Payment.find().populate('user order shop order.products.product'),
+    query
+  )
+    .search(['shop.shopName, user.name'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  return result;
+  const data = await paymentQuery.modelQuery;
+  const meta = await paymentQuery.countTotal();
+
+  return {
+    meta,
+    data,
+  };
 };
 
 // get User Payments
-const getUserPaymentsFromDB = async (authUser: IJwtPayload) => {
-  const payments = await Payment.find({ user: authUser.userId }).populate(
-    'user order shop shop.products.product'
-  );
+const getUserPaymentsFromDB = async (
+  query: Record<string, unknown>,
+  authUser: IJwtPayload
+) => {
+  const paymentQuery = new QueryBuilder(
+    Payment.find({ user: authUser.userId }).populate(
+      'user order shop order.products.product'
+    ),
+    query
+  )
+    .search(['shop.shopName, user.name'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  return payments;
+  const data = await paymentQuery.modelQuery;
+  const meta = await paymentQuery.countTotal();
+
+  return {
+    meta,
+    data,
+  };
 };
 
 // getPaymentDetailsFromDB

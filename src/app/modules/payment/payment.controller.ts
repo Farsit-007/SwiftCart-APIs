@@ -6,18 +6,22 @@ import catchAsync from '../../utils/catchAsync';
 
 // get All Payments (admin)
 const getAllPayments = async (req: Request, res: Response) => {
-  const result = await PaymentService.getAllPaymentsFromDB();
+  const result = await PaymentService.getAllPaymentsFromDB(req.query);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     message: 'Payments retrived succesfully!',
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 };
 
 // get User Payments
 const getUserPayments = catchAsync(async (req: Request, res: Response) => {
-  const result = await PaymentService.getUserPaymentsFromDB(req.user);
+  const result = await PaymentService.getUserPaymentsFromDB(
+    req.query,
+    req.user
+  );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
