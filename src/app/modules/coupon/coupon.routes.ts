@@ -14,7 +14,7 @@ router.get('/', auth(UserRole.ADMIN,UserRole.USER), couponController.getAllCoupo
 router.patch(
   '/:couponCode/update-coupon',
   validateRequest(updateCouponValidationSchema),
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN, UserRole.USER),
   couponController.updateCoupon
 );
 
@@ -26,7 +26,7 @@ router.post(
 
 router.delete(
   '/:couponId',
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN,UserRole.USER),
   couponController.deleteCoupon
 );
 

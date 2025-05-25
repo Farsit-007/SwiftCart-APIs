@@ -87,9 +87,9 @@ export const getAllCoupon = async (query: Record<string, unknown>,user:JwtPayloa
 
 const updateCoupon = async (payload: Partial<ICoupon>, couponCode: string) => {
   const currentDate = new Date();
-
-  const coupon = await Coupon.findOne({ code: couponCode });
-
+ console.log('Updating coupon with code:', couponCode,payload);
+  const coupon = await Coupon.findById({ _id:couponCode });
+  console.log('Found coupon:', coupon);
   if (!coupon) {
     throw new AppError(StatusCodes.NOT_FOUND, 'Coupon not found.');
   }
@@ -99,11 +99,11 @@ const updateCoupon = async (payload: Partial<ICoupon>, couponCode: string) => {
   }
 
   const updatedCoupon = await Coupon.findByIdAndUpdate(
-    coupon._id,
+   couponCode,
     { $set: payload },
     { new: true, runValidators: true }
   );
-
+ console.log('Updated coupon:', updatedCoupon);
   return updatedCoupon;
 };
 
