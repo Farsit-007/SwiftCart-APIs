@@ -45,7 +45,7 @@ const createCoupon = async (
 
 
 export const getAllCoupon = async (query: Record<string, unknown>,user:JwtPayload) => {
-  console.log(user, 'user in getAllCoupon service');
+
   const session = await startSession();
   session.startTransaction();
 
