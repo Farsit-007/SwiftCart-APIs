@@ -114,7 +114,6 @@ orderSchema.pre('validate', async function (next) {
 
     item.unitPrice = productPrice;
     const price = productPrice * item.quantity;
-    console.log(price);
     totalAmount += price;
   }
 

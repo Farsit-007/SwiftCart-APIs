@@ -3,11 +3,6 @@ import { SSLController } from './sslcommerz.controller';
 
 const router = Router();
 
-// Define routes
-
-router.post(
-    '/validate',
-    SSLController.validatePaymentService
-)
+router.post('/validate', SSLController.validatePaymentService);
 
 export const SSLRoutes = router;

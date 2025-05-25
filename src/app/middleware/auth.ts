@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
 import { UserRole } from '../modules/user/user.interface';
 import catchAsync from '../utils/catchAsync';
 import User from '../modules/user/user.model';
 import AppError from '../errors/appError';
 import { verifyToken } from '../modules/auth/auth.utils';
+import { IJwtPayload } from '../modules/auth/auth.interface';
 
 const auth = (...requiredRoles: UserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -50,7 +50,7 @@ const auth = (...requiredRoles: UserRole[]) => {
       );
     }
 
-    req.user = { ...decoded, _id: user._id } as JwtPayload;
+    req.user = decoded as IJwtPayload;
     next();
   });
 };

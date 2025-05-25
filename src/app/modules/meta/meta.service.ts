@@ -148,7 +148,6 @@ const getOrdersByDate = async (
    endDate?: string,
    groupBy?: string
 ) => {
-   console.log({ startDate });
 
    if (startDate && !endDate) {
       const orders = await Order.aggregate([

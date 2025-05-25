@@ -16,6 +16,7 @@ export interface IJwtPayload {
   userId: string;
   name: string;
   email: string;
+  profilePhoto: string;
   hasShop: boolean;
   role: UserRole;
   isActive: boolean;
