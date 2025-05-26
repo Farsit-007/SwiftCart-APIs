@@ -26,20 +26,20 @@ const createFlashSale = async (flashSellData: ICreateFlashSaleInput, authUser: I
   const { products, discountPercentage } = flashSellData;
   const createdBy = authUser.userId;
 
-  const operations = products.map((product) => ({
-    updateOne: {
-      filter: { product },
-      update: {
-        $setOnInsert: {
-          product,
-          discountPercentage,
-          createdBy,
-        },
-      },
-      upsert: true,
-    },
-  }));
 
+  const operations = products.map((product) => ({
+  updateOne: {
+    filter: { product },
+    update: {
+      $set: {
+        product,
+        discountPercentage,
+        createdBy,
+      },
+    },
+    upsert: true,
+  },
+}));
   const result = await FlashSale.bulkWrite(operations);
   return result;
 };
