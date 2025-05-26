@@ -42,7 +42,6 @@ const getAllShops = catchAsync(async (req: Request, res: Response) => {
 
 const deleteShop = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log(req.params);
   const result = await ShopService.deleteShop(id, req.user as IJwtPayload);
 
   sendResponse(res, {

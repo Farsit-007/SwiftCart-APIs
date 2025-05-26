@@ -33,9 +33,14 @@ const createShop = async (
     }
 
     // Check if a shop already exists for this user (additional safety check)
-    const existingShop = await Shop.findOne({ user: existingUser._id }).session(session);
+    const existingShop = await Shop.findOne({ user: existingUser._id }).session(
+      session
+    );
     if (existingShop) {
-      throw new AppError(StatusCodes.CONFLICT, 'Shop already exists for this user!');
+      throw new AppError(
+        StatusCodes.CONFLICT,
+        'Shop already exists for this user!'
+      );
     }
 
     if (logo) {
@@ -87,8 +92,8 @@ const getAllShops = async (query: Record<string, unknown>) => {
     shopQuery.find({
       $or: [
         { name: { $regex: query.searchTerm, $options: 'i' } },
-        { description: { $regex: query.searchTerm, $options: 'i' } }
-      ]
+        { description: { $regex: query.searchTerm, $options: 'i' } },
+      ],
     });
   }
 
@@ -122,16 +127,15 @@ const deleteShop = async (id: string, authUser: IJwtPayload) => {
     if (!shop) {
       throw new AppError(StatusCodes.NOT_FOUND, 'Shop not found');
     }
-    
+
     // Check permissions
-    console.log('shop user', shop.user);
     const isOwner = shop.user?.toString() === authUser.userId;
-    
+
     const isAdmin = authUser.role === 'admin';
 
     if (!isOwner && !isAdmin) {
       throw new AppError(
-        StatusCodes.FORBIDDEN, 
+        StatusCodes.FORBIDDEN,
         'You are not authorized to delete this shop'
       );
     }
@@ -162,5 +166,5 @@ export const ShopService = {
   createShop,
   getMyShop,
   getAllShops,
-  deleteShop
+  deleteShop,
 };
